@@ -1,10 +1,12 @@
 package com.example.zafiro5.loginregistrorecetas.Actividades;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -15,7 +17,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.zafiro5.loginregistrorecetas.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,19 +24,21 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
 
     private RequestQueue cola;
+    private TextView txvRegistro;
     private EditText edtEmail, edtPass;
     private Button btnIniciar;
-    private JsonObjectRequest Jsonobjectrequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        this.txvRegistro = (TextView)findViewById(R.id.txvRegistro);
         this.edtEmail = (EditText)findViewById(R.id.edtEmail);
         this.edtPass = (EditText)findViewById(R.id.edtPass);
         this.btnIniciar = (Button)findViewById(R.id.btnIniciar);
 
+        this.txvRegistro.setOnClickListener(this);
         this.btnIniciar.setOnClickListener(this);
 
         cola = Volley.newRequestQueue(this);
@@ -73,6 +76,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         if(v.getId() == v.findViewById(R.id.btnIniciar).getId()) {
             comprobarDatos();
+        }
+
+        else if(v.getId() == v.findViewById(R.id.txvRegistro).getId()) {
+            Intent registro = new Intent(getApplicationContext(), Registro.class);
+            startActivity(registro);
         }
     }
 }
