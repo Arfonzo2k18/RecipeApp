@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Actividades.Registro"></activity>
-        <activity android:name=".Actividades.Login">
+        <activity android:name=".Actividades.Login" android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
