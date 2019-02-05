@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -113,7 +112,18 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                final ProgressDialog progressDialog = new ProgressDialog(Login.this,
+                        R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Autenticando...");
+                progressDialog.show();
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), "Credenciales incorrectas.", Toast.LENGTH_SHORT).show();
+                            }
+                        }, 1000);
             }
         });
         cola.add(request);
