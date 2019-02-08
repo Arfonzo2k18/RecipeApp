@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
-    android:background="@drawable/bg_color"
+    android:background="@color/iron"
     android:theme="@style/AppTheme">
 
     <LinearLayout
@@ -16,21 +16,10 @@
         android:paddingTop="56dp"
         android:paddingRight="24dp">
 
-        <TextView
-            android:id="@+id/textViewTitulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:fontFamily="@font/baloo_thambi"
-            android:gravity="center"
-            android:text="Crear Cuenta"
-            android:textColor="@color/white"
-            android:textSize="48sp" />
-
         <!--  Password Label -->
 
         <ImageView
-            android:id="@+id/imvRegistro"
+            android:id="@+id/imvPerfil"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:src="@drawable/fotoperfil" />
@@ -40,31 +29,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:theme="@style/AppTheme.Dark">
-
-            <EditText
-                android:id="@+id/input_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress" />
-        </android.support.design.widget.TextInputLayout>
+            android:theme="@style/AppTheme.Dark"/>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:theme="@style/AppTheme.Dark">
-
-            <EditText
-                android:id="@+id/input_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Contraseña"
-                android:inputType="textPassword"
-                android:theme="@style/AppTheme.Dark" />
-        </android.support.design.widget.TextInputLayout>
+            android:theme="@style/AppTheme.Dark"/>
 
         <!--  Password Label -->
 
@@ -73,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:theme="@style/AppTheme.Dark">
+            android:theme="@style/AppTheme">
 
             <EditText
                 android:id="@+id/input_usuario"
@@ -88,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:theme="@style/AppTheme.Dark">
+            android:theme="@style/AppTheme">
 
             <EditText
                 android:id="@+id/input_nombre"
@@ -96,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Nombre"
                 android:inputType="text"
-                android:theme="@style/AppTheme.Dark" />
+                android:theme="@style/AppTheme" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -104,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:theme="@style/AppTheme.Dark">
+            android:theme="@style/AppTheme">
 
             <EditText
                 android:id="@+id/input_apellidos"
@@ -112,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Apellidos"
                 android:inputType="text"
-                android:theme="@style/AppTheme.Dark" />
+                android:theme="@style/AppTheme" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -120,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:theme="@style/AppTheme.Dark">
+            android:theme="@style/AppTheme">
 
             <EditText
                 android:id="@+id/input_movil"
@@ -128,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Movil"
                 android:inputType="text|phone"
-                android:theme="@style/AppTheme.Dark" />
+                android:theme="@style/AppTheme" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -136,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:theme="@style/AppTheme.Dark">
+            android:theme="@style/AppTheme">
 
             <EditText
                 android:id="@+id/input_bio"
@@ -144,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Biografía"
                 android:inputType="textMultiLine"
-                android:theme="@style/AppTheme.Dark" />
+                android:theme="@style/AppTheme" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -152,7 +124,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:theme="@style/AppTheme.Dark">
+            android:theme="@style/AppTheme">
 
             <EditText
                 android:id="@+id/input_fecha_nac"
@@ -160,20 +132,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Fecha nacimiento"
                 android:inputType="textMultiLine"
-                android:theme="@style/AppTheme.Dark" />
+                android:theme="@style/AppTheme" />
         </android.support.design.widget.TextInputLayout>
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_crear_cuenta"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:background="@color/primary_darker"
-            android:padding="12dp"
-            android:text="Crear Cuenta"
-            android:textColor="@color/white"
-            android:theme="@style/Widget.AppCompat.Button.Colored" />
 
 
     </LinearLayout>

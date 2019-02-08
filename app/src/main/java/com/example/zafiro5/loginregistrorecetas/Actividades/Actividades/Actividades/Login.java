@@ -1,4 +1,4 @@
-package com.example.zafiro5.loginregistrorecetas.Actividades;
+package com.example.zafiro5.loginregistrorecetas.Actividades.Actividades.Actividades;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -20,6 +20,8 @@ import com.example.zafiro5.loginregistrorecetas.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,8 +74,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void comprobarDatos(){
-        String url = "http://192.168.1.254:3000/api/authenticate?email=" + _emailText.getText().toString() + "&" + "password=" + _passwordText.getText().toString();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+        String url = "http://192.168.1.10:3000/api/authenticate";
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("email", _emailText.getText().toString());
+        params.put("password", _passwordText.getText().toString());
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url,new JSONObject(params), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -81,6 +86,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             R.style.AppTheme_Dark_Dialog);
                     progressDialog.setIndeterminate(true);
                     progressDialog.setMessage("Autenticando...");
+                    progressDialog.setMax(6);
                     progressDialog.show();
                     final String idusuario = response.getString("idusuario");
 
@@ -89,14 +95,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                 public void run() {
                                     progressDialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "Has iniciado sesión correctamente, idusuario: " + idusuario, Toast.LENGTH_SHORT).show();
+                                    Intent principal = new Intent(getApplicationContext(), Principal.class);
+                                    principal.putExtra("idusuario", idusuario);
+                                    startActivity(principal);
                                 }
                             }, 1000);
-
                 } catch (JSONException e) {
                     final ProgressDialog progressDialog = new ProgressDialog(Login.this,
                             R.style.AppTheme_Dark_Dialog);
                     progressDialog.setIndeterminate(true);
                     progressDialog.setMessage("Autenticando...");
+                    progressDialog.setMax(6);
                     progressDialog.show();
                     new android.os.Handler().postDelayed(
                             new Runnable() {
@@ -108,14 +117,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     e.printStackTrace();
                 }
             }
-        },
-                new Response.ErrorListener() {
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 final ProgressDialog progressDialog = new ProgressDialog(Login.this,
                         R.style.AppTheme_Dark_Dialog);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Autenticando...");
+                progressDialog.setMax(6);
                 progressDialog.show();
                 new android.os.Handler().postDelayed(
                         new Runnable() {
