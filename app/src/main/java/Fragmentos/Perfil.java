@@ -1,37 +1,27 @@
 package Fragmentos;
 
 
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.example.zafiro5.loginregistrorecetas.Actividades.Actividades.Actividades.Login;
-import com.example.zafiro5.loginregistrorecetas.Actividades.Actividades.Actividades.Principal;
+import com.android.volley.toolbox.Volley;
 import com.example.zafiro5.loginregistrorecetas.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
-import Clases.Usuario;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -40,7 +30,6 @@ import butterknife.ButterKnife;
  */
 public class Perfil extends Fragment {
 
-    private String idusuario;
     private String nombre;
     private String apellidos;
     private String usuario;
@@ -63,30 +52,26 @@ public class Perfil extends Fragment {
         View view = inflater.inflate(R.layout.fragment_perfil, container, false);
         ButterKnife.bind(view);
 
+        lista = Volley.newRequestQueue(getActivity().getApplicationContext());
         //Indicamos que este fragmento debe rellenar el menú
         setHasOptionsMenu(true);
-        String idusuario = getActivity().getIntent().getStringExtra("idusuario");
-        cargarPerfil(idusuario);
+        //cargarPerfil();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_perfil, container, false);
     }
 
-    public void cargarPerfil(String id){
-        String direccion = "http://192.168.1.10:3000/api/userprofile/" + id;
+   /* public void cargarPerfil(){
+        String direccion = "http://192.168.1.10:3000/api/userprofile/" + getActivity().getIntent().getStringExtra("idusuario");
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, direccion, null, new Response.Listener<JSONObject>() {
             public void onResponse(JSONObject response) {
                 try {
-                    Usuario perfil = new Usuario(response.getString("nombre"), response.getString("apellidos"), response.getString("username"), response.getString("biografia"), response.getString("telefono"), response.getString("fechanac"), response.getString("imagen").getBytes());
-                   /* _nombreText.setText();
-                    _apeText.setText();
-                    _usuarioText.setText();
-                    _bioText.setText();
-                    _movilText.setText();
-                    _fechanacText.setText();
-                    Bitmap bmp;
-                    byte[] imagens = response.getString("imagen").getBytes();
-                    bmp = BitmapFactory.decodeByteArray(imagens, 0, imagens.length);
-                    imvPerfil.setImageBitmap(bmp);*/
+                    final String nombre = response.getString("nombre");
+                    _nombreText.setText(nombre);
+                    _apeText.setText(response.getString("apellidos"));
+                    _usuarioText.setText(response.getString("username"));
+                    _bioText.setText(response.getString("biografia"));
+                    _movilText.setText(response.getString("telefono"));
+                    _fechanacText.setText(response.getString("fechanac"));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -99,6 +84,60 @@ public class Perfil extends Fragment {
             }
         });
         lista.add(request);
-    }
+    }*/
 
+    private class LongOperation extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            for (int i = 0; i < 5; i++) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                String direccion = "http://192.168.1.10:3000/api/userprofile/" + getActivity().getIntent().getStringExtra("idusuario");
+                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, direccion, null, new Response.Listener<JSONObject>() {
+                    public void onResponse(JSONObject response) {
+                        try {
+                            final String nombre = response.getString("nombre");
+                            final String apellidos = response.getString("apellidos");
+                            final String usuario = response.getString("username");
+                            final String biografia = response.getString("biografia");
+                            final String telefono = response.getString("telefono");
+                            final String fechanac = response.getString("fechanac");
+                            final String foto = response.getString("imagen");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("error", error.getMessage());
+                    }
+                });
+                lista.add(request);
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.interrupted();
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+    }
 }

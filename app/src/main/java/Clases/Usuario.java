@@ -9,11 +9,12 @@ public class Usuario {
     private String movil;
     private String biografia;
     private String fechanac;
-    private byte[] foto;
+    private String foto;
 
     public Usuario(){}
 
-    public Usuario(String nombre, String apellidos, String usuario, String biografia, String movil, String fechanac, byte[] foto) {
+    public Usuario(String idusuario, String nombre, String apellidos, String usuario, String biografia, String movil, String fechanac, String foto) {
+        this.idusuario = idusuario;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.usuario = usuario;
@@ -31,11 +32,11 @@ public class Usuario {
         this.idusuario = idusuario;
     }
 
-    public byte[] getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(byte[] foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
     }
 
