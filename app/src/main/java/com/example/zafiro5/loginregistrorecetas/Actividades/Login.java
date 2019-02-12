@@ -35,7 +35,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.btn_login) Button _loginButton;
     @BindView(R.id.link_signup) TextView _signupLink;
     static String idusuario;
-    String baseurl = "http://192.168.1.10:3000/api/authenticate";
+    String baseurl = "http://192.168.1.254:3000/api/authenticate";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -34,7 +34,6 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import Fragmentos.RecetasFragment;
 
 import static com.example.zafiro5.loginregistrorecetas.Actividades.Login.idusuario;
@@ -42,9 +41,8 @@ import static com.example.zafiro5.loginregistrorecetas.Actividades.Login.idusuar
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private BottomNavigationView btnNavegacion;
     RequestQueue lista;
-    String baseurl = "http://192.168.1.10:3000";
+    String baseurl = "http://192.168.1.254:3000";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +57,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
             }
         });
 
@@ -76,14 +73,14 @@ public class MainActivity extends AppCompatActivity
         View vista = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
 
-        btnNavegacion = (BottomNavigationView) findViewById(R.id.btnNavegacion);
+        BottomNavigationView btnNavegacion = (BottomNavigationView) findViewById(R.id.btnNavegacion);
         //Creamos una escucha para comprobar si se ha pulsado sobre él
         btnNavegacion.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Fragment fragment = null;
                 switch (menuItem.getItemId()) {
-                    case R.id.navegacion_inferior_perfil:
+                    case R.id.navegacion_inferior_misrecetas:
                         //fragment = new ();
                         break;
 

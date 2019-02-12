@@ -32,7 +32,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="65dp"
         app:backgroundTint="@color/primary"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/ic_action_name" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/btnNavegacion"

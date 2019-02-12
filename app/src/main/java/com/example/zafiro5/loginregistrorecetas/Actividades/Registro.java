@@ -55,7 +55,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
     ImageView imvRegistro;
     private byte[] foto;
     HashMap<String, String> params = new HashMap<String, String>();
-    String baseurl = "http://192.168.1.10:3000/api/register";
+    String baseurl = "http://192.168.1.254:3000/api/register";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
