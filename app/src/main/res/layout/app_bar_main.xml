@@ -20,15 +20,31 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_main" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="65dp"
         app:backgroundTint="@color/primary"
         app:srcCompat="@android:drawable/ic_dialog_email" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/btnNavegacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:background="@color/primary"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="left|bottom"
+        app:menu="@menu/navigation" />
 
 </android.support.design.widget.CoordinatorLayout>

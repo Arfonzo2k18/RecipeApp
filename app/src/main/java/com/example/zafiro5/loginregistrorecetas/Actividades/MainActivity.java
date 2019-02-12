@@ -3,8 +3,12 @@ package com.example.zafiro5.loginregistrorecetas.Actividades;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -31,11 +35,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import Fragmentos.RecetasFragment;
+
 import static com.example.zafiro5.loginregistrorecetas.Actividades.Login.idusuario;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private BottomNavigationView btnNavegacion;
     RequestQueue lista;
     String baseurl = "http://192.168.1.10:3000";
 
@@ -68,6 +75,33 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View vista = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
+
+        btnNavegacion = (BottomNavigationView) findViewById(R.id.btnNavegacion);
+        //Creamos una escucha para comprobar si se ha pulsado sobre él
+        btnNavegacion.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                Fragment fragment = null;
+                switch (menuItem.getItemId()) {
+                    case R.id.navegacion_inferior_perfil:
+                        //fragment = new ();
+                        break;
+
+                    case R.id.navegacion_inferior_recetas:
+                        fragment = new RecetasFragment();
+                        break;
+
+                    case R.id.navegacion_inferior_ubicacion:
+                        //fragment = new Extras_fragmento();
+                        break;
+                }
+                replaceFragment(fragment);
+                return true;
+            }
+        });
+
+        //Llamamos al método para iniciar el primer fragmento, en este caso el NuevoFragment
+        setInitialFragment();
     }
 
     @Override
@@ -158,23 +192,6 @@ public class MainActivity extends AppCompatActivity
                         String foto = response.getString("imagen");
                         Picasso.with(getApplicationContext()).load(baseurl + foto).into(imvFoto);
 
-                        // CARGAMOS LOS DATOS RESTANTES EN EL SIDENAV
-                        /*String nombre = response.getString("nombre");
-                        MenuItem nombreTitulo = vista.findViewById(R.id.nav_camera);
-                        nombreTitulo.setTitle(nombre);
-
-                        String apellidos = response.getString("apellidos");
-                        MenuItem apellidoTitulo = vista.findViewById(R.id.nav_gallery);
-                        apellidoTitulo.setTitle(apellidos);
-
-                        String fechanac = response.getString("fechanac");
-                        MenuItem fechanacTitulo = vista.findViewById(R.id.nav_slideshow);
-                        fechanacTitulo.setTitle(fechanac);
-
-                        String biografia = response.getString("biografia");
-                        String telefono = response.getString("telefono");*/
-
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -211,5 +228,19 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
         }
+    }
+
+    //Método para iniciar los Fragmentos, en este caso cargará NuevoFragment
+    private void setInitialFragment() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.include, new RecetasFragment());
+        fragmentTransaction.commit();
+    }
+
+    //Método que cambiará el Fragmento
+    private void replaceFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.include, fragment);
+        fragmentTransaction.commit();
     }
 }
