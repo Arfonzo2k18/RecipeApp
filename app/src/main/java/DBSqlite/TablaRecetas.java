@@ -46,7 +46,7 @@ public class TablaRecetas {
     /**
      * Close the database connection.
      */
-    private void closeDatabase(){
+    public void closeDatabase(){
         if (this.database != null){
             this.database.close();
         }
@@ -89,7 +89,7 @@ public ArrayList<Receta> recetas_por_autor(String autor) {
     ArrayList<Receta> arrayRecetas = new ArrayList<Receta>();
     this.open();
 
-    c = database.rawQuery("SELECT id_receta, nombre, descripcion, foto, pdf, autor, categoria FROM recetas where autor = " + autor, null);
+    c = database.rawQuery("SELECT * FROM recetas where autor ='"+ autor +"'", null);
 
     //Nos aseguramos de que existe al menos un registro
     if (c.moveToFirst()) {

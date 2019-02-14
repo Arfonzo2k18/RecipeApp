@@ -18,27 +18,25 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
 import Clases.Receta;
-import DBSqlite.TablaRecetas;
 
-public class AdaptadorRecetas extends RecyclerView.Adapter<AdaptadorRecetas.RecetasViewHolder> {
+public class AdaptadorRecetas extends RecyclerView.Adapter<AdaptadorRecetas.RecetasViewHolder> implements View.OnClickListener {
 
     private ArrayList<Receta> listaRecetas;
+    private Activity activity;
+    private View.OnClickListener listener;
 
-    public AdaptadorRecetas(Context context){
-        TablaRecetas tablaRecetas = new TablaRecetas(context);
-        this.listaRecetas = tablaRecetas.todos_las_recetas();
-    }
-
-    public void porAutor(Context context, String autor) {
-        TablaRecetas tablaRecetas = new TablaRecetas(context);
-        this.listaRecetas = tablaRecetas.recetas_por_autor(autor);
+    public AdaptadorRecetas(Activity activity, ArrayList<Receta> listaRecetas){
+        this.activity = activity;
+        this.listaRecetas = listaRecetas;
     }
 
     @NonNull
     @Override
     public AdaptadorRecetas.RecetasViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new RecetasViewHolder(LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.layout_recetas, viewGroup, false));
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.layout_recetas, viewGroup, false);
+        view.setOnClickListener(this);
+        return new RecetasViewHolder(view);
     }
 
     @Override
@@ -61,6 +59,18 @@ public class AdaptadorRecetas extends RecyclerView.Adapter<AdaptadorRecetas.Rece
         return listaRecetas.size();
     }
 
+
+    // Método que se encarga de escuchar ese elemento
+    public void setOnClicListener(View.OnClickListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(listener != null) {
+            listener.onClick(view);
+        }
+    }
 
     class RecetasViewHolder extends RecyclerView.ViewHolder{
 

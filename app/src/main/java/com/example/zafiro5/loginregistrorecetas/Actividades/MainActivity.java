@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -41,6 +40,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     RequestQueue lista;
+    String idusuario;
     String baseurl = "http://192.168.1.10:3000";
     private BottomNavigationView btnNavegacion;
 
@@ -48,9 +48,10 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        idusuario = getIntent().getStringExtra("idusuario");
         lista = Volley.newRequestQueue(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -81,15 +82,22 @@ public class MainActivity extends AppCompatActivity
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Fragment fragment = null;
                 switch (menuItem.getItemId()) {
-                    case R.id.navegacion_inferior_misrecetas:
-                        fragment = new MisRecetasFragment();
+                    case R.id.navigation_misrecetas:
+                        toolbar.setTitle("Mis Recetas");
+                        Bundle args = new Bundle();
+                        args.putString("idusuario", idusuario);
+                        Fragment fragmento = new MisRecetasFragment();
+                        fragmento.setArguments(args);
+                        fragment = fragmento;
                         break;
 
-                    case R.id.navegacion_inferior_recetas:
+                    case R.id.navigation_recetas:
+                        toolbar.setTitle("Recipe App");
                         fragment = new RecetasFragment();
                         break;
 
-                    case R.id.navegacion_inferior_ubicacion:
+                    case R.id.navigation_ubicacion:
+                        toolbar.setTitle("Ubicacion");
                         //fragment = new Extras_fragmento();
                         break;
                 }
@@ -115,7 +123,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+       // getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -126,11 +134,6 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -140,17 +143,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_perfil) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_cerrarsesion) {
 
         }
 
@@ -168,7 +163,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... params) {
-            String direccion = baseurl + "/api/userprofile/" + getIntent().getStringExtra("idusuario");
+            String direccion = baseurl + "/api/userprofile/" + idusuario;
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, direccion, null, new Response.Listener<JSONObject>() {
                 public void onResponse(JSONObject response) {
                     try {

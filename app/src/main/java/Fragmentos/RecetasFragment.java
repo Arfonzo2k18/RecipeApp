@@ -1,5 +1,6 @@
 package Fragmentos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -9,9 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.zafiro5.loginregistrorecetas.Actividades.PDFViewer;
 import com.example.zafiro5.loginregistrorecetas.R;
 
+import java.util.ArrayList;
+
 import Adaptadores.AdaptadorRecetas;
+import Clases.Receta;
+import DBSqlite.TablaRecetas;
 
 public class RecetasFragment extends Fragment {
 
@@ -24,6 +30,7 @@ public class RecetasFragment extends Fragment {
     private RecyclerView recyclerView;
     private View rootView;
     private GridLayoutManager gridLayoutManager;
+    ArrayList<Receta> listaRecetas;
 
     //Objetos para vincularlo con el XML
     private FloatingActionButton btnFlotAdd;
@@ -44,7 +51,6 @@ public class RecetasFragment extends Fragment {
 
         //Vinculamos el RecycleView y el FloatingActionButton con el del XML
         this.recyclerView = (RecyclerView) rootView.findViewById(R.id.rvRecetas);
-        this.btnFlotAdd = (FloatingActionButton) rootView.findViewById(R.id.btnFlotAdd);
 
         cargarRecetas();
 
@@ -55,7 +61,20 @@ public class RecetasFragment extends Fragment {
     public void cargarRecetas(){
         gridLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
-        adaptadorRecetas = new AdaptadorRecetas(getContext());
+        TablaRecetas tablaRecetas = TablaRecetas.getInstance(getContext());
+        tablaRecetas.open();
+        listaRecetas = tablaRecetas.todos_las_recetas();
+        tablaRecetas.closeDatabase();
+        adaptadorRecetas = new AdaptadorRecetas(getActivity(), listaRecetas);
+        adaptadorRecetas.setOnClicListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), PDFViewer.class);
+                intent.putExtra("receta",
+                        listaRecetas.get(recyclerView.getChildAdapterPosition(view)).getPdf());
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(adaptadorRecetas);
     }
 
