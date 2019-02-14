@@ -34,8 +34,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.input_password) EditText _passwordText;
     @BindView(R.id.btn_login) Button _loginButton;
     @BindView(R.id.link_signup) TextView _signupLink;
-    static String idusuario;
-    String baseurl = "http://192.168.1.254:3000/api/authenticate";
+    String idusuario;
+    String baseurl = "http://192.168.1.10:3000/api/authenticate";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +98,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                     progressDialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "Has iniciado sesión correctamente.", Toast.LENGTH_SHORT).show();
                                     Intent principal = new Intent(getApplicationContext(), MainActivity.class);
+                                    principal.putExtra("idusuario", idusuario);
                                     startActivity(principal);
                                 }
                             }, 1000);

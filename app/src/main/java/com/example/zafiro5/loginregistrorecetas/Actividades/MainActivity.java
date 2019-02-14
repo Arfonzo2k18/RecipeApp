@@ -34,15 +34,15 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import Fragmentos.MisRecetasFragment;
 import Fragmentos.RecetasFragment;
-
-import static com.example.zafiro5.loginregistrorecetas.Actividades.Login.idusuario;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     RequestQueue lista;
-    String baseurl = "http://192.168.1.254:3000";
+    String baseurl = "http://192.168.1.10:3000";
+    private BottomNavigationView btnNavegacion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,8 @@ public class MainActivity extends AppCompatActivity
         View vista = navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(this);
 
-        BottomNavigationView btnNavegacion = (BottomNavigationView) findViewById(R.id.btnNavegacion);
+        btnNavegacion = (BottomNavigationView) findViewById(R.id.btnNavegacion);
+
         //Creamos una escucha para comprobar si se ha pulsado sobre él
         btnNavegacion.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity
                 Fragment fragment = null;
                 switch (menuItem.getItemId()) {
                     case R.id.navegacion_inferior_misrecetas:
-                        //fragment = new ();
+                        fragment = new MisRecetasFragment();
                         break;
 
                     case R.id.navegacion_inferior_recetas:
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... params) {
-            String direccion = baseurl + "/api/userprofile/" + idusuario;
+            String direccion = baseurl + "/api/userprofile/" + getIntent().getStringExtra("idusuario");
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, direccion, null, new Response.Listener<JSONObject>() {
                 public void onResponse(JSONObject response) {
                     try {
@@ -240,4 +241,5 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.replace(R.id.include, fragment);
         fragmentTransaction.commit();
     }
+
 }

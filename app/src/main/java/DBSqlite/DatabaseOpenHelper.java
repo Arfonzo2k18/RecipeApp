@@ -5,7 +5,7 @@ import android.content.Context;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 public class DatabaseOpenHelper extends SQLiteAssetHelper {
-    private static final String DATABASE_NAME = "recetas.db";
+    private static final String DATABASE_NAME = "basededatos.db";
     private static final int DATABASE_VERSION = 1;
 
     public DatabaseOpenHelper(Context context) {

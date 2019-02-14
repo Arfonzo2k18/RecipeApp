@@ -13,12 +13,12 @@ import com.example.zafiro5.loginregistrorecetas.R;
 
 import Adaptadores.AdaptadorRecetas;
 
-public class RecetasFragment extends Fragment {
+public class MisRecetasFragment extends Fragment {
 
-
-    public RecetasFragment() {
+    public MisRecetasFragment() {
     }
 
+    private String usuarioLogged = getActivity().getIntent().getStringExtra("idusuario");
     //Propiedades
     private AdaptadorRecetas adaptadorRecetas;
     private RecyclerView recyclerView;
@@ -40,22 +40,23 @@ public class RecetasFragment extends Fragment {
         setHasOptionsMenu(true);
 
         //Inflamos la Vista rootView para Visualizar el Adaptador personalizado
-        rootView = inflater.inflate(R.layout.fragment_recetas, container, false);
+        rootView = inflater.inflate(R.layout.fragment_misrecetas, container, false);
 
         //Vinculamos el RecycleView y el FloatingActionButton con el del XML
-        this.recyclerView = (RecyclerView) rootView.findViewById(R.id.rvRecetas);
+        this.recyclerView = (RecyclerView) rootView.findViewById(R.id.rvMisRecetas);
         this.btnFlotAdd = (FloatingActionButton) rootView.findViewById(R.id.btnFlotAdd);
 
-        cargarRecetas();
+        cargarRecetas(usuarioLogged);
 
         //Devolvemos la Vista
         return rootView;
     }
 
-    public void cargarRecetas(){
+    public void cargarRecetas(String autor){
         gridLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
         adaptadorRecetas = new AdaptadorRecetas(getContext());
+        adaptadorRecetas.porAutor(getActivity().getApplicationContext(), autor);
         recyclerView.setAdapter(adaptadorRecetas);
     }
 
