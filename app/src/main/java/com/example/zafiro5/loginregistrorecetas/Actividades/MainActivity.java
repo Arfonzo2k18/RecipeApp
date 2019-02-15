@@ -1,7 +1,11 @@
 package com.example.zafiro5.loginregistrorecetas.Actividades;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -20,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -48,17 +53,22 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        cambiarStatusBar();
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         idusuario = getIntent().getStringExtra("idusuario");
         lista = Volley.newRequestQueue(this);
 
+        comprobarseion(idusuario);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent crearreceta = new Intent(getApplicationContext(), CrearReceta.class);
+                crearreceta.putExtra("idusuario", idusuario);
+                startActivity(crearreceta);
             }
         });
 
@@ -93,7 +103,11 @@ public class MainActivity extends AppCompatActivity
 
                     case R.id.navigation_recetas:
                         toolbar.setTitle("Recipe App");
-                        fragment = new RecetasFragment();
+                        Bundle argumento = new Bundle();
+                        argumento.putString("categoria", "nada");
+                        Fragment fragmentorecetas = new RecetasFragment();
+                        fragmentorecetas.setArguments(argumento);
+                        fragment = fragmentorecetas;
                         break;
 
                     case R.id.navigation_ubicacion:
@@ -123,7 +137,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.main, menu);
+       getMenuInflater().inflate(R.menu.menu_filtro, menu);
         return true;
     }
 
@@ -134,6 +148,19 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if(id == R.id.action_search) {
+            String[] colors = {"Entrantes", "Pescado", "Carnes", "Verduras", "Ensaladas", "Postres"};
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Filtrar por:");
+            builder.setItems(colors, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int seleccion) {
+                    filtro(seleccion);
+                }
+            });
+            builder.show();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -146,7 +173,8 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_perfil) {
 
         } else if (id == R.id.nav_cerrarsesion) {
-
+            idusuario = "";
+            comprobarseion(idusuario);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -154,6 +182,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Clase cargardatos, utilizada para hacer peticiones HTTP de manera asíncrona.
+     * */
     private class cargardatos extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -161,6 +192,10 @@ public class MainActivity extends AppCompatActivity
             super.onPreExecute();
         }
 
+        /**
+         * Metodo que hace una peticion HTTP al servidor y recibe un usuario que posteriormente
+         * se cargara en el drawer navigation.
+         * */
         @Override
         protected Void doInBackground(Void... params) {
             String direccion = baseurl + "/api/userprofile/" + idusuario;
@@ -225,16 +260,107 @@ public class MainActivity extends AppCompatActivity
 
     //Método para iniciar los Fragmentos, en este caso cargará NuevoFragment
     private void setInitialFragment() {
+        Bundle argumento = new Bundle();
+        argumento.putString("categoria", "nada");
+        Fragment fragmentorecetas = new RecetasFragment();
+        fragmentorecetas.setArguments(argumento);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.include, new RecetasFragment());
+        fragmentTransaction.add(R.id.include, fragmentorecetas);
         fragmentTransaction.commit();
     }
 
-    //Método que cambiará el Fragmento
+    /**
+     * Este metodo se encarga de cambiar el fragmento actual por el que introducimos por parametro.
+     * @param: Fragment: fragment
+     * */
     private void replaceFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.include, fragment);
         fragmentTransaction.commit();
+    }
+
+    /**
+     * Este metodo se encarga de comprobar si la sesion esta activa, en caso
+     * de estarlo no estarlo, te manda a la actividad de login.
+    * @param: usuario: String
+    * */
+    private void comprobarseion(String usuario){
+        if(usuario == "") {
+            Intent salir = new Intent(getApplicationContext(), Login.class);
+            Toast.makeText(getApplicationContext(), "¡Vuelve pronto!", Toast.LENGTH_SHORT).show();
+            startActivity(salir);
+        }
+    }
+
+    // Metodo para cambiar el color a la barra de estado.
+    private void cambiarStatusBar(){
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_darker));
+        }
+    }
+
+    private void filtro(int seleccion) {
+        Fragment fragment = null;
+        Bundle args = new Bundle();
+
+
+        if(seleccion == 0) {
+            args.putString("categoria", "Entrantes");
+            Fragment fragmento = new RecetasFragment();
+            fragmento.setArguments(args);
+            fragment = fragmento;
+            replaceFragment(fragment);
+            Toast.makeText(getApplicationContext(), "¡Has seleccionado Entrantes!", Toast.LENGTH_SHORT).show();
+        }
+
+        if(seleccion == 1) {
+            args.putString("categoria", "Pescado");
+            Fragment fragmento = new RecetasFragment();
+            fragmento.setArguments(args);
+            fragment = fragmento;
+            replaceFragment(fragment);
+            Toast.makeText(getApplicationContext(), "¡Has seleccionado Pescado!", Toast.LENGTH_SHORT).show();
+        }
+
+        if(seleccion == 2) {
+            args.putString("categoria", "Carnes");
+            Fragment fragmento = new RecetasFragment();
+            fragmento.setArguments(args);
+            fragment = fragmento;
+            replaceFragment(fragment);
+            Toast.makeText(getApplicationContext(), "¡Has seleccionado Carnes!", Toast.LENGTH_SHORT).show();
+        }
+
+        if(seleccion == 3) {
+            args.putString("categoria", "Verduras");
+            Fragment fragmento = new RecetasFragment();
+            fragmento.setArguments(args);
+            fragment = fragmento;
+            replaceFragment(fragment);
+            Toast.makeText(getApplicationContext(), "¡Has seleccionado Verduras!", Toast.LENGTH_SHORT).show();
+        }
+
+        if(seleccion == 4) {
+            args.putString("categoria", "Ensaladas");
+            Fragment fragmento = new RecetasFragment();
+            fragmento.setArguments(args);
+            fragment = fragmento;
+            replaceFragment(fragment);
+            Toast.makeText(getApplicationContext(), "¡Has seleccionado Ensaladas!", Toast.LENGTH_SHORT).show();
+        }
+
+        if(seleccion == 5) {
+            args.putString("categoria", "Postres");
+            Fragment fragmento = new RecetasFragment();
+            fragmento.setArguments(args);
+            fragment = fragmento;
+            replaceFragment(fragment);
+            Toast.makeText(getApplicationContext(), "¡Has seleccionado Postres!", Toast.LENGTH_SHORT).show();
+        }
+
+
+
     }
 
 }

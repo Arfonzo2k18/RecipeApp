@@ -32,9 +32,6 @@ public class MisRecetasFragment extends Fragment {
     private GridLayoutManager gridLayoutManager;
     private ArrayList<Receta> misRecetas;
 
-    //Objetos para vincularlo con el XML
-    private FloatingActionButton btnFlotAdd;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

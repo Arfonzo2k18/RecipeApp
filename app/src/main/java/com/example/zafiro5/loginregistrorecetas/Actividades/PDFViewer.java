@@ -8,6 +8,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toolbar;
 
 import com.example.zafiro5.loginregistrorecetas.R;
@@ -28,7 +29,7 @@ public class PDFViewer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdfviewer);
-
+        cambiarStatusBar();
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbarpdf);
         toolbar.setBackgroundColor(getResources().getColor(R.color.primary));
         toolbar.setTitle("Visor PDF");
@@ -55,6 +56,13 @@ public class PDFViewer extends AppCompatActivity {
                     .enableDoubletap(true)
                     .enableAntialiasing(true)
                     .load();
+        }
+    }
+
+    private void cambiarStatusBar(){
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            getWindow().setStatusBarColor(getResources().getColor(R.color.primary_darker));
         }
     }
 }

@@ -4,17 +4,14 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
-
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Date;
 
 public class GenerarPDF {
 
@@ -36,23 +33,22 @@ public class GenerarPDF {
     /**
      * Crea la carpeta contenedora y el archivo PDF en el que se trabajará
      */
-    private void createFile(){
-        File carpeta = new File(Environment.getExternalStorageDirectory().toString(), "PDF");
+    private void createFile(String nombre){
+        File carpeta = new File(Environment.getExternalStorageDirectory().toString(), "NuevoPDF");
         if (!carpeta.exists()) {
             carpeta.mkdir();
         }
-        this.pdfFile = new File(carpeta, "Presupuesto Concesionario.pdf");
+        this.pdfFile = new File(carpeta, nombre+".pdf");
     }
 
     /**
      * Abre el documento como escritura para poder modificarlo
      */
-    public void openDocument(){
-        this.createFile();
+    public void openDocument(String nombre){
+        this.createFile(nombre);
         try {
             this.document = new Document();
             this.pdfWriter = PdfWriter.getInstance(this.document, new FileOutputStream(this.pdfFile));
-            this.document.addCreationDate();
             this.document.addProducer();
             this.document.setPageSize(PageSize.A4);
             this.document.open();
@@ -86,14 +82,11 @@ public class GenerarPDF {
      * Añade una cabecera al PDF
      *
      * @param titulo :String
-     * @param subtitulo :String
      */
-    public void addTtitulo(String titulo, String subtitulo){
+    public void addTtitulo(String titulo){
         try {
             this.paragraph = new Paragraph();
             this.addParagraph(new Paragraph(titulo, fTitulo));
-            this.addParagraph(new Paragraph(subtitulo, fSubTitulo));
-            this.addParagraph(new Paragraph("Generado: " + new Date().toString(), fFecha));
             this.paragraph.setSpacingAfter(30);
             this.document.add(this.paragraph);
         }catch (Exception e){
@@ -114,27 +107,20 @@ public class GenerarPDF {
      *
      * @param paragraphHijo
      */
-    private void addParagraphCliente(Paragraph paragraphHijo){
+    private void addParagraphReceta(Paragraph paragraphHijo){
         paragraphHijo.setAlignment(Element.ALIGN_LEFT);
         this.paragraph.add(paragraphHijo);
     }
 
-    public void addDatosCliente(String nombre, String apellidos, String email, int telefono, String poblacion, String direccion){
+    public void addDatosReceta(String descripcion){
         try {
             this.paragraph = new Paragraph();
-            this.addParagraphCliente(new Paragraph("Cliente: " ));
-            this.addParagraphCliente(new Paragraph("Nombre: " + nombre));
-            this.addParagraphCliente(new Paragraph("Apellidos: " + apellidos));
-            this.addParagraphCliente(new Paragraph("Email: " + email));
-            this.addParagraphCliente(new Paragraph("Telefono: " + telefono));
-            this.addParagraphCliente(new Paragraph("Población: " + poblacion));
-            this.addParagraphCliente(new Paragraph("Dirección: " + direccion));
-
+            this.addParagraphReceta(new Paragraph(descripcion));
             this.paragraph.setSpacingBefore(5);
             this.paragraph.setSpacingAfter(5);
             this.document.add(this.paragraph);
         }catch (Exception e){
-            Log.e("addDatosCliente", e.toString());
+            Log.e("addDatosReceta", e.toString());
         }
     }
 

@@ -37,6 +37,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import Clases.Receta;
+import DBSqlite.TablaRecetas;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -105,13 +107,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
             valid = false;
         } else {
             _passwordText.setError(null);
-        }
-
-        if (nombre.isEmpty()) {
-            _nombreText.setError("La clave debe tener entre 4 y 10 carácteres");
-            valid = false;
-        } else {
-            _nombreText.setError(null);
         }
 
         if (nombre.isEmpty()) {
