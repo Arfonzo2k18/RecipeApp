@@ -36,8 +36,7 @@ public class PDFViewer extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         receta = (PDFView) findViewById(R.id.visorPdf);
 
-        Intent intent = getIntent();
-        uriReceta = intent.getStringExtra("receta");
+        uriReceta = getIntent().getStringExtra("receta");
         cargarPdf();
     }
     // Método para cargar el pdf en la actividad

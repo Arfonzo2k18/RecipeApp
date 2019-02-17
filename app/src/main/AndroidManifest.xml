@@ -20,7 +20,10 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Actividades.Perfil"></activity>
+        <activity
+            android:name=".Actividades.Perfil"
+            android:theme="@style/AppTheme.Dark">
+        </activity>
         <activity
             android:name=".Actividades.CrearReceta"
             android:theme="@style/AppTheme.Dark" />

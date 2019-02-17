@@ -13,13 +13,26 @@ public class Usuario {
 
     public Usuario(){}
 
-    public Usuario(String idusuario, String nombre, String apellidos, String usuario, String biografia, String movil, String fechanac, String foto) {
+    public Usuario(String nombre, String apellidos, String email, String usuario, String biografia, String movil, String fechanac, String foto) {
+        this.idusuario = idusuario;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.email = email;
+        this.usuario = usuario;
+        this.movil = movil;
+        this.biografia = biografia;
+        this.fechanac = fechanac;
+        this.foto = foto;
+    }
+
+    public Usuario(String idusuario, String nombre, String apellidos, String usuario, String email, String biografia, String movil, String fechanac, String foto) {
         this.idusuario = idusuario;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.usuario = usuario;
-        this.movil = movil;
+        this.email = email;
         this.biografia = biografia;
+        this.movil = movil;
         this.fechanac = fechanac;
         this.foto = foto;
     }

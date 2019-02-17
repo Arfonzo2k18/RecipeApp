@@ -1,7 +1,6 @@
 package com.example.zafiro5.loginregistrorecetas.Actividades;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -39,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import Fragmentos.MisRecetasFragment;
+import Fragmentos.NavegacionFragment;
 import Fragmentos.RecetasFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         cambiarStatusBar();
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Recipe App");
         setSupportActionBar(toolbar);
 
         idusuario = getIntent().getStringExtra("idusuario");
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity
 
                     case R.id.navigation_ubicacion:
                         toolbar.setTitle("Ubicacion");
-                        //fragment = new Extras_fragmento();
+                        fragment = new NavegacionFragment();
                         break;
                 }
                 replaceFragment(fragment);
@@ -171,7 +172,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_perfil) {
-
+            Intent perfil = new Intent(getApplicationContext(), Perfil.class);
+            perfil.putExtra("idusuario", idusuario);
+            startActivity(perfil);
         } else if (id == R.id.nav_cerrarsesion) {
             idusuario = "";
             comprobarseion(idusuario);
@@ -236,21 +239,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
-            final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this,
-                    R.style.AppTheme_Dark_Dialog);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Autenticando...");
-            progressDialog.setMax(6);
-            progressDialog.show();
-
-            new android.os.Handler().postDelayed(
-                    new Runnable() {
-                        public void run() {
-                            progressDialog.dismiss();
-                        }
-                    }, 1000);
-        }
+        protected void onProgressUpdate(Void... values) { }
 
         @Override
         protected void onPostExecute(Void result) {
@@ -358,8 +347,6 @@ public class MainActivity extends AppCompatActivity
             replaceFragment(fragment);
             Toast.makeText(getApplicationContext(), "¡Has seleccionado Postres!", Toast.LENGTH_SHORT).show();
         }
-
-
 
     }
 
