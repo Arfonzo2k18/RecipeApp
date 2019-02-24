@@ -113,6 +113,11 @@ public class CrearReceta extends AppCompatActivity implements View.OnClickListen
             _descripcionText.setError(null);
         }
 
+        if (foto == null) {
+            valid = false;
+            Toast.makeText(getApplicationContext(), "Debes hacer una foto para tu perfil.", Toast.LENGTH_SHORT).show();
+        }
+
         return valid;
     }
 

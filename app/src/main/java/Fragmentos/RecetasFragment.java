@@ -1,14 +1,22 @@
 package Fragmentos;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.zafiro5.loginregistrorecetas.Actividades.CrearReceta;
 import com.example.zafiro5.loginregistrorecetas.Actividades.PDFViewer;
 import com.example.zafiro5.loginregistrorecetas.R;
 
@@ -30,7 +38,9 @@ public class RecetasFragment extends Fragment {
     private RecyclerView recyclerView;
     private View rootView;
     private GridLayoutManager gridLayoutManager;
+    private String idusuario;
     ArrayList<Receta> listaRecetas;
+    FloatingActionButton fab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +59,12 @@ public class RecetasFragment extends Fragment {
             categoriaSeleccionada = "";
         }
 
+        if(getArguments().getString("idusuario") != "nada") {
+            idusuario = getArguments().getString("idusuario");
+        } else {
+            idusuario = "";
+        }
+
         //Inflamos la Vista rootView para Visualizar el Adaptador personalizado
         rootView = inflater.inflate(R.layout.fragment_recetas, container, false);
 
@@ -60,6 +76,17 @@ public class RecetasFragment extends Fragment {
         } else {
             cargarRecetasPorCategoria(categoriaSeleccionada);
         }
+
+        fab = (FloatingActionButton) rootView.findViewById(R.id.btnFloat);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent crearReceta = new Intent(getContext(), CrearReceta.class);
+                crearReceta.putExtra("idusuario", idusuario);
+                startActivity(crearReceta);
+            }
+        });
 
         //Devolvemos la Vista
         return rootView;
@@ -103,6 +130,63 @@ public class RecetasFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(adaptadorRecetas);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.menu_filtro, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if(id == R.id.action_search) {
+            String[] colors = {"Entrantes", "Pescado", "Carnes", "Verduras", "Ensaladas", "Postres"};
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Filtrar por:");
+            builder.setItems(colors, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int seleccion) {
+                    filtro(seleccion);
+                }
+            });
+            builder.show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void filtro(int seleccion) {
+
+        if(seleccion == 0) {
+           cargarRecetasPorCategoria("Entrantes");
+        }
+
+        if(seleccion == 1) {
+            cargarRecetasPorCategoria("Pescado");
+        }
+
+        if(seleccion == 2) {
+            cargarRecetasPorCategoria("Carnes");
+        }
+
+        if(seleccion == 3) {
+            cargarRecetasPorCategoria("Verduras");
+        }
+
+        if(seleccion == 4) {
+            cargarRecetasPorCategoria("Ensaladas");
+        }
+
+        if(seleccion == 5) {
+            cargarRecetasPorCategoria("Postres");
+        }
+
     }
 
 }

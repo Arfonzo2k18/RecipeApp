@@ -4,6 +4,7 @@
     <string name="title_perfil">Perfil</string>
     <string name="title_recetas">Recetas</string>
     <string name="title_ubicacion">Ubicacion</string>
+    <string name="google_maps_key">AIzaSyC93n65QS0t8N7F4up9BPCWGBEW3j1f_4w</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

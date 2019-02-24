@@ -1,9 +1,14 @@
 package com.example.zafiro5.loginregistrorecetas.Actividades;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,13 +48,16 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        comprobarPermisosCamara();
+        comprobarPermisosUbicacion();
+        comprobarPermisosSMS();
+
         this._emailText.setHintTextColor(1);
         this._passwordText.setHintTextColor(1);
         this._loginButton.setOnClickListener(this);
         this._signupLink.setOnClickListener(this);
 
         cola = Volley.newRequestQueue(this);
-
     }
 
     private boolean validarFormulario() {
@@ -139,6 +147,40 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         });
         cola.add(request);
     }
+
+    private void comprobarPermisosCamara() {
+        int permissionCheckCamera = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.CAMERA);
+        if (permissionCheckCamera != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Mensaje", "No se tiene permiso para la camara!.");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 225);
+        } else {
+            Log.i("Mensaje", "Tienes permiso para usar la camara.");
+        }
+    }
+
+    private void comprobarPermisosUbicacion() {
+        int permissionCheckUbicacion = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (permissionCheckUbicacion != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Mensaje", "No se tiene permiso para la ubicacion!.");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 205);
+        } else {
+            Log.i("Mensaje", "Tienes permiso para usar la ubicacion.");
+        }
+    }
+
+    private void comprobarPermisosSMS() {
+        int permissionCheckUbicacion = ContextCompat.checkSelfPermission(
+                this, Manifest.permission.SEND_SMS);
+        if (permissionCheckUbicacion != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Mensaje", "No se tiene permiso para enviar SMS!.");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 200);
+        } else {
+            Log.i("Mensaje", "Tienes permiso para enviar SMS.");
+        }
+    }
+
 
     @Override
     public void onClick(View v) {

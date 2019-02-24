@@ -10,10 +10,12 @@ public class Usuario {
     private String biografia;
     private String fechanac;
     private String foto;
+    private String latitud;
+    private String altitud;
 
     public Usuario(){}
 
-    public Usuario(String nombre, String apellidos, String email, String usuario, String biografia, String movil, String fechanac, String foto) {
+    public Usuario(String nombre, String apellidos, String email, String usuario, String biografia, String movil, String fechanac, String foto, String latitud, String altitud) {
         this.idusuario = idusuario;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -23,9 +25,11 @@ public class Usuario {
         this.biografia = biografia;
         this.fechanac = fechanac;
         this.foto = foto;
+        this.latitud = latitud;
+        this.altitud = altitud;
     }
 
-    public Usuario(String idusuario, String nombre, String apellidos, String usuario, String email, String biografia, String movil, String fechanac, String foto) {
+    public Usuario(String idusuario, String nombre, String apellidos, String usuario, String email, String biografia, String movil, String fechanac, String foto, String latitud, String altitud) {
         this.idusuario = idusuario;
         this.nombre = nombre;
         this.apellidos = apellidos;
@@ -35,6 +39,8 @@ public class Usuario {
         this.movil = movil;
         this.fechanac = fechanac;
         this.foto = foto;
+        this.latitud = latitud;
+        this.altitud = altitud;
     }
 
     public String getIdusuario() {
@@ -107,5 +113,21 @@ public class Usuario {
 
     public void setFechanac(String fechanac) {
         this.fechanac = fechanac;
+    }
+
+    public String getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(String latitud) {
+        this.latitud = latitud;
+    }
+
+    public String getAltitud() {
+        return altitud;
+    }
+
+    public void setAltitud(String altitud) {
+        this.altitud = altitud;
     }
 }

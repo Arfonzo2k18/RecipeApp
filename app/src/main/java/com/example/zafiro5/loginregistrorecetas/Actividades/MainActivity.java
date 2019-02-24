@@ -1,16 +1,22 @@
 package com.example.zafiro5.loginregistrorecetas.Actividades;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     RequestQueue lista;
     String idusuario;
     String baseurl = "http://192.168.1.10:3000";
+    String telef;
     private BottomNavigationView btnNavegacion;
 
     @Override
@@ -62,16 +69,6 @@ public class MainActivity extends AppCompatActivity
         lista = Volley.newRequestQueue(this);
 
         comprobarseion(idusuario);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent crearreceta = new Intent(getApplicationContext(), CrearReceta.class);
-                crearreceta.putExtra("idusuario", idusuario);
-                startActivity(crearreceta);
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -106,6 +103,7 @@ public class MainActivity extends AppCompatActivity
                         toolbar.setTitle("Recipe App");
                         Bundle argumento = new Bundle();
                         argumento.putString("categoria", "nada");
+                        argumento.putString("idusuario", idusuario);
                         Fragment fragmentorecetas = new RecetasFragment();
                         fragmentorecetas.setArguments(argumento);
                         fragment = fragmentorecetas;
@@ -135,36 +133,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-       getMenuInflater().inflate(R.menu.menu_filtro, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if(id == R.id.action_search) {
-            String[] colors = {"Entrantes", "Pescado", "Carnes", "Verduras", "Ensaladas", "Postres"};
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Filtrar por:");
-            builder.setItems(colors, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int seleccion) {
-                    filtro(seleccion);
-                }
-            });
-            builder.show();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -178,6 +146,12 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_cerrarsesion) {
             idusuario = "";
             comprobarseion(idusuario);
+        } else if (id == R.id.nav_sms) {
+            SmsManager sms = SmsManager.getDefault();
+            sms.sendTextMessage(telef, null, "saludos al usuario con id: " + idusuario , null, null);
+        } else if (id == R.id.nav_llamada){
+            String telefono = "tel:" + telef;
+            startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(telefono)));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -223,15 +197,15 @@ public class MainActivity extends AppCompatActivity
                         String foto = response.getString("imagen");
                         Picasso.with(getApplicationContext()).load(baseurl + foto).into(imvFoto);
 
+                        telef = response.getString("telefono");
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }, new Response.ErrorListener() {
                 @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("error", error.getMessage());
-                }
+                public void onErrorResponse(VolleyError error) { }
             });
 
             lista.add(request);
@@ -287,67 +261,6 @@ public class MainActivity extends AppCompatActivity
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             getWindow().setStatusBarColor(getResources().getColor(R.color.primary_darker));
         }
-    }
-
-    private void filtro(int seleccion) {
-        Fragment fragment = null;
-        Bundle args = new Bundle();
-
-
-        if(seleccion == 0) {
-            args.putString("categoria", "Entrantes");
-            Fragment fragmento = new RecetasFragment();
-            fragmento.setArguments(args);
-            fragment = fragmento;
-            replaceFragment(fragment);
-            Toast.makeText(getApplicationContext(), "¡Has seleccionado Entrantes!", Toast.LENGTH_SHORT).show();
-        }
-
-        if(seleccion == 1) {
-            args.putString("categoria", "Pescado");
-            Fragment fragmento = new RecetasFragment();
-            fragmento.setArguments(args);
-            fragment = fragmento;
-            replaceFragment(fragment);
-            Toast.makeText(getApplicationContext(), "¡Has seleccionado Pescado!", Toast.LENGTH_SHORT).show();
-        }
-
-        if(seleccion == 2) {
-            args.putString("categoria", "Carnes");
-            Fragment fragmento = new RecetasFragment();
-            fragmento.setArguments(args);
-            fragment = fragmento;
-            replaceFragment(fragment);
-            Toast.makeText(getApplicationContext(), "¡Has seleccionado Carnes!", Toast.LENGTH_SHORT).show();
-        }
-
-        if(seleccion == 3) {
-            args.putString("categoria", "Verduras");
-            Fragment fragmento = new RecetasFragment();
-            fragmento.setArguments(args);
-            fragment = fragmento;
-            replaceFragment(fragment);
-            Toast.makeText(getApplicationContext(), "¡Has seleccionado Verduras!", Toast.LENGTH_SHORT).show();
-        }
-
-        if(seleccion == 4) {
-            args.putString("categoria", "Ensaladas");
-            Fragment fragmento = new RecetasFragment();
-            fragmento.setArguments(args);
-            fragment = fragmento;
-            replaceFragment(fragment);
-            Toast.makeText(getApplicationContext(), "¡Has seleccionado Ensaladas!", Toast.LENGTH_SHORT).show();
-        }
-
-        if(seleccion == 5) {
-            args.putString("categoria", "Postres");
-            Fragment fragmento = new RecetasFragment();
-            fragmento.setArguments(args);
-            fragment = fragmento;
-            replaceFragment(fragment);
-            Toast.makeText(getApplicationContext(), "¡Has seleccionado Postres!", Toast.LENGTH_SHORT).show();
-        }
-
     }
 
 }

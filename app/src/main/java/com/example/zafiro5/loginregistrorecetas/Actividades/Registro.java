@@ -4,9 +4,14 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -30,6 +35,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONObject;
 
@@ -58,6 +67,7 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
     private byte[] foto;
     HashMap<String, String> params = new HashMap<String, String>();
     String baseurl = "http://192.168.1.10:3000/api/register";
+    double latitude = 0.0, longitude = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +87,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
         this._crear_cuentaButton.setOnClickListener(this);
         this._fechanacText.setOnClickListener(this);
         this._usuarioText.setOnClickListener(this);
-
-        checkCameraPermission();
         cola = Volley.newRequestQueue(this);
     }
 
@@ -93,7 +101,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
         String movil = _movilText.getText().toString();
         String biografia = _bioText.getText().toString();
         String fechanac = _fechanacText.getText().toString();
-
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError("Introduce una dirección de correo válida");
@@ -151,10 +158,16 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
             _fechanacText.setError(null);
         }
 
+        if (foto == null) {
+            valid = false;
+            Toast.makeText(getApplicationContext(), "Debes hacer una foto para tu perfil.", Toast.LENGTH_SHORT).show();
+        }
+
         return valid;
     }
 
     private void enviarDatos(){
+        traerCoordenadas();
         params.put("nombre", _nombreText.getText().toString());
         params.put("telefono", _movilText.getText().toString());
         params.put("apellidos", _apeText.getText().toString());
@@ -163,6 +176,11 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
         params.put("fechanac", _fechanacText.getText().toString());
         params.put("email", _emailText.getText().toString());
         params.put("password", _passwordText.getText().toString());
+        if (latitude != 0.0 && longitude != 0.0) {
+            params.put("latitud", String.valueOf(latitude));
+            params.put("altitud", String.valueOf(longitude));
+        }
+
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, baseurl,new JSONObject(params), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -199,19 +217,6 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
             }
         });
         cola.add(request);
-    }
-
-    private boolean checkCameraPermission() {
-        int permissionCheck = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.CAMERA);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Mensaje", "No se tiene permiso para la camara!.");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 225);
-            return false;
-        } else {
-            Log.i("Mensaje", "Tienes permiso para usar la camara.");
-            return true;
-        }
     }
 
     @SuppressLint("NewApi")
@@ -266,6 +271,26 @@ public class Registro extends AppCompatActivity implements View.OnClickListener 
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream);
                 foto = stream.toByteArray();
                 params.put("foto", Base64.encodeToString(foto, Base64.DEFAULT));
+            }
+        }
+    }
+
+
+    public void traerCoordenadas(){
+        // Comprobamos si no tenemos permisos para acceder al GPS
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Obtenemos nuestra ubicación a través de la longitud y la latitud
+            LocationManager locationManager = (LocationManager) ((AppCompatActivity) this).getSystemService(Context.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+            String bestProvider = locationManager.getBestProvider(criteria, true);
+            Location location;
+            if (locationManager.getLastKnownLocation(bestProvider) != null) {
+                location = locationManager.getLastKnownLocation(bestProvider);
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+            else{
+
             }
         }
     }
